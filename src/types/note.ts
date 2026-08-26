@@ -20,7 +20,7 @@ export interface ThemeSettings {
 export type FontFamily = "system-sans" | "serif" | "monospace";
 export type TextDirection = "auto" | "ltr" | "rtl";
 export type EditorWidth = "narrow" | "normal" | "wide" | "full" | "custom";
-export type SortOrder = "title-asc" | "title-desc" | "modified-desc" | "modified-asc" | string;
+export type SortOrder = "title-asc" | "title-desc" | "modified-desc" | "modified-asc";
 
 export interface EditorFontSettings {
   baseFontFamily?: FontFamily;

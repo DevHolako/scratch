@@ -15,7 +15,7 @@ import {
   ChevronRightIcon,
   XIcon,
 } from "../icons";
-import type { Settings } from "../../types/note";
+import type { Settings, SortOrder } from "../../types/note";
 import { SORT_STRATEGIES, DEFAULT_SORT_ORDER } from "../../lib/sorting";
 
 // Format remote URL for display - extract user/repo from full URL
@@ -833,7 +833,7 @@ function FoldersToggle() {
 }
 
 function NoteSortSelector() {
-  const [sortOrder, setSortOrder] = useState<string>(DEFAULT_SORT_ORDER);
+  const [sortOrder, setSortOrder] = useState<SortOrder>(DEFAULT_SORT_ORDER);
   const [isUpdating, setIsUpdating] = useState(false);
   const { notesFolder, refreshNotes } = useNotes();
 
@@ -847,7 +847,7 @@ function NoteSortSelector() {
       });
   }, [notesFolder]);
 
-  const handleChange = async (newOrder: string) => {
+  const handleChange = async (newOrder: SortOrder) => {
     setIsUpdating(true);
     try {
       const settings = await invoke<Settings>("get_settings");
@@ -867,7 +867,7 @@ function NoteSortSelector() {
   return (
     <select
       value={sortOrder}
-      onChange={(e) => handleChange(e.target.value)}
+      onChange={(e) => handleChange(e.target.value as SortOrder)}
       disabled={isUpdating}
       className="px-3 py-1.5 text-sm bg-bg border border-border rounded-[10px] text-text cursor-pointer focus:outline-none focus:ring-1 focus:ring-accent shrink-0"
     >

@@ -1,7 +1,7 @@
-import type { NoteMetadata, FolderNode } from "../types/note";
+import type { NoteMetadata, FolderNode, SortOrder } from "../types/note";
 
 export interface SortStrategy {
-  id: string;
+  id: SortOrder;
   label: string;
   description: string;
   compareNotes: (a: NoteMetadata, b: NoteMetadata) => number;
@@ -9,10 +9,14 @@ export interface SortStrategy {
 }
 
 // Natural collation for human-friendly sorting (e.g. "1 - Note", "2 - Note", "10 - Note")
+const naturalCollator = new Intl.Collator(undefined, {
+  numeric: true,
+  sensitivity: "base",
+});
 const naturalCompare = (a: string, b: string) =>
-  a.localeCompare(b, undefined, { numeric: true, sensitivity: "base" });
+  naturalCollator.compare(a, b) || a.localeCompare(b);
 
-export const SORT_STRATEGIES: Record<string, SortStrategy> = {
+export const SORT_STRATEGIES: Record<SortOrder, SortStrategy> = {
   "title-asc": {
     id: "title-asc",
     label: "Alphabetical / Folder Structure (A–Z)",
@@ -43,11 +47,11 @@ export const SORT_STRATEGIES: Record<string, SortStrategy> = {
   },
 };
 
-export const DEFAULT_SORT_ORDER = "title-asc";
+export const DEFAULT_SORT_ORDER: SortOrder = "modified-desc";
 
-export function getSortStrategy(sortOrder?: string): SortStrategy {
-  if (sortOrder && SORT_STRATEGIES[sortOrder]) {
-    return SORT_STRATEGIES[sortOrder];
+export function getSortStrategy(sortOrder?: string | null): SortStrategy {
+  if (sortOrder && (sortOrder as SortOrder) in SORT_STRATEGIES) {
+    return SORT_STRATEGIES[sortOrder as SortOrder];
   }
   return SORT_STRATEGIES[DEFAULT_SORT_ORDER];
 }
